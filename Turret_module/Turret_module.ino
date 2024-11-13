@@ -5,6 +5,8 @@ Servo myservo2;
 
 int pos = 90;
 
+int laser = 8; // 레이저 모듈
+
 int mainSubmotor = 9; // 방향 전환 서브모터
 int reloadSubmotor = 3; // 재장전 서브모터
 const int pirPin = 2;  // PIR 센서가 연결된 핀
@@ -29,6 +31,7 @@ void setup() {
   myservo1.attach(mainSubmotor);
   pinMode(reloadSubmotor,OUTPUT);
   myservo2.attach(reloadSubmotor);
+  pinMode(laser, OUTPUT);
 
   myservo1.write(pos);   
 
@@ -70,7 +73,7 @@ void loop()
   Serial.print("cm");
   Serial.println();
 
-  follow();  //초음파 거리를 비교해서 추적
+  follow();
   motion_tracking(); //동작 감지 센서
 
   delay(100);
@@ -78,35 +81,28 @@ void loop()
 }
 
 
-
+// 초음파 거리를 비교해서 추적
 void follow(){
+  if (Lcm <= threshold || Rcm <= threshold){
 
-    if (Lcm <= threshold || Rcm <= threshold){
-
-        if(Lcm + 3 < Rcm){
-
-            pos = pos + 3;}
-
-        if(Rcm + 3 < Lcm){
-
-            pos = pos - 3;}
-
+    if(Lcm + 4 < Rcm){
+      pos = pos + 4;
     }
 
-    if (pos > 160){
-
-        pos = 160;
-
+    if(Rcm + 4 < Lcm){
+      pos = pos - 4;
     }
+  }
 
-    if (pos < 20){
+  if (pos > 160){
+      pos = 160;
+  }
 
-        pos = 20;
-
-    }
-
-    myservo1.write(pos);
-
+  if (pos < 20){
+      pos = 20;
+  }
+  
+  myservo1.write(pos);
 }
 
 //동작 감지 센서
@@ -119,6 +115,7 @@ void motion_tracking() {
   }
 }
 
+// dc모터 회전
 void dc_motorON() {
   analogWrite(A0, 255);
   analogWrite(A1, 0);
@@ -130,6 +127,7 @@ void dc_motorON() {
 void launch_missile() {
   int reload_pos = 0;
   dc_motorON();
+  digitalWrite(laser, HIGH);
   delay(100);
   dc_motorON();
   delay(100);
@@ -149,4 +147,6 @@ void launch_missile() {
   analogWrite(A1, 0);
   analogWrite(A2, 0);
   analogWrite(A3, 0);
+  delay(500);
+  digitalWrite(laser, LOW);
 }
