@@ -1,3 +1,5 @@
+int data;
+
 // Left ultrasonic sensor pins
 int l_trigPin = 13;
 int l_echoPin = 12;
@@ -14,11 +16,12 @@ int RightMotor_2_pin = 9;   // Right motor direction pin
 int LeftMotor_3_pin = 10;   // Left motor direction pin
 int LeftMotor_4_pin = 11;   // Left motor direction pin
 
-int L_MotorSpeed = 180;     // Left motor speed
-int R_MotorSpeed = 180;     // Right motor speed
+int L_MotorSpeed = 250;     // Left motor speed
+int R_MotorSpeed = 250;     // Right motor speed
 int obstacleThreshold = 30; // Threshold distance in cm for obstacle detection
 
 void setup() {
+  pinMode(4, INPUT);
   // Motor pin setup
   pinMode(RightMotor_E_pin, OUTPUT);
   pinMode(LeftMotor_E_pin, OUTPUT);
@@ -38,6 +41,18 @@ void setup() {
 }
 
 void loop() {
+  data = digitalRead(4);
+  if(data == 1)
+  {
+    L_MotorSpeed = 0;
+    R_MotorSpeed = 0;
+  }
+  else if(data == 0)
+  {
+    L_MotorSpeed = 250;
+    R_MotorSpeed = 250;
+  }
+
   // Get distance from both ultrasonic sensors sequentially to avoid interference
   int l_Ultra_d = getDistance(l_trigPin, l_echoPin);
   delay(50);  // Small delay to avoid sensor interference

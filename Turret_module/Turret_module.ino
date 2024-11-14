@@ -11,13 +11,13 @@ int mainSubmotor = 9; // 방향 전환 서브모터
 int reloadSubmotor = 3; // 재장전 서브모터
 const int pirPin = 2;  // PIR 센서가 연결된 핀
 
-int trigPin_R = 5;
-int echoPin_R = 4;
+int trigPin_R = 5; // 오른쪽 초음파 센서 trigPin
+int echoPin_R = 4; // 오른쪽 초음파 센서 echoPin
 
-int trigPin_L = 7;
-int echoPin_L = 6;
+int trigPin_L = 7; // 왼쪽 초음파 센서 trigPin
+int echoPin_L = 6; // 왼쪽 초음파 센서 echoPin
 
-int threshold = 50;
+int threshold = 500;
 
 long Lduration, Rduration, Lcm, Rcm;
 
@@ -26,6 +26,7 @@ long Lduration, Rduration, Lcm, Rcm;
 void setup() {
 
   Serial.begin(9600);
+  pinMode(12, OUTPUT);
   pinMode(pirPin, INPUT);
   pinMode(mainSubmotor,OUTPUT);
   myservo1.attach(mainSubmotor);
@@ -41,6 +42,7 @@ void setup() {
   pinMode(echoPin_R, INPUT);
   pinMode(trigPin_R, OUTPUT);
 
+  // Motor B Motor A 정방향 기준 A3 A2 A1 A0
   pinMode(A0, OUTPUT);              // 5번핀을 출력모드로 설정합니다.
   pinMode(A1, OUTPUT);              // 6번핀을 출력모드로 설정합니다.
   pinMode(A2, OUTPUT);             // 10번핀을 출력모드로 설정합니다.
@@ -126,6 +128,7 @@ void dc_motorON() {
 // 미사일 발사 코드
 void launch_missile() {
   int reload_pos = 0;
+  digitalWrite(12,1);
   dc_motorON();
   digitalWrite(laser, HIGH);
   delay(100);
@@ -149,4 +152,5 @@ void launch_missile() {
   analogWrite(A3, 0);
   delay(500);
   digitalWrite(laser, LOW);
+  digitalWrite(12,0);
 }
