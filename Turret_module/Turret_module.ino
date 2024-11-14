@@ -17,7 +17,7 @@ int echoPin_R = 4; // 오른쪽 초음파 센서 echoPin
 int trigPin_L = 7; // 왼쪽 초음파 센서 trigPin
 int echoPin_L = 6; // 왼쪽 초음파 센서 echoPin
 
-int threshold = 500;
+int threshold = 100;
 
 long Lduration, Rduration, Lcm, Rcm;
 
